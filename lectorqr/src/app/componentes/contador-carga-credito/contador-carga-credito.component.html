@@ -1,9 +1,10 @@
 <ion-card class="ion-text-center">
-  <ion-card-header>
-    <ion-card-title>Saldo Disponible<app-limpiar-carga class="ion-float-right"></app-limpiar-carga></ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-    <ion-text color="dark" *ngIf="credito?.credito"><h1><b>${{credito?.credito}}</b></h1></ion-text>
-    <ion-text color="dark" *ngIf="!credito?.credito"><h1><b>$0</b></h1></ion-text>
+  <!-- <ion-card-header> -->
+    <!-- <ion-card-title>Saldo Disponible<app-limpiar-carga class="ion-float-right"></app-limpiar-carga></ion-card-title> -->
+  <!-- </ion-card-header> -->
+  <ion-card-content >
+    <ion-text style="color: rgb(3, 131, 78);" ><h1><b>${{credito}}</b></h1></ion-text>
+    <ion-text style="color: rgb(37, 37, 37);" ><h2><b>Saldo Disponible</b></h2></ion-text>
+    <!-- <ion-text color="dark" *ngIf="!credito"><h1><b>$0</b></h1></ion-text> -->
   </ion-card-content>
 </ion-card>

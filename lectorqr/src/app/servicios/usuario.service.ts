@@ -48,6 +48,7 @@ export class UsuarioService {
        const unsubscribe = this.afsAuth.auth.onAuthStateChanged(user => {
           unsubscribe();
           resolve(user);
+          console.log(user)
        }, reject);
     });
   }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, QueryFn } from '@angular/fire/firestore';
 import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/operators';
+import { Usuario } from '../clases/usuario';
 
 @Injectable({
   providedIn: 'root'
@@ -52,14 +53,30 @@ export class FirebaseService {
         }));
   }
 
+   //utilizo este para traer el credito
+  getOne(collection, id){
+        return this.afs.collection(collection).snapshotChanges().pipe(map(res =>{
+          return res.map(i => {  
+            let data = i.payload.doc.data() as Usuario;          
+            if (id==i.payload.doc.id){          
+               data.id = i.payload.doc.id;               
+            }
+            return data;
+          })
+        })); 
+      }
+
   getById(id: string, collection: string) {
     this.objetoDoc = this.afs.doc<any>(`${collection}/${id}`);
     return this.objeto = this.objetoDoc.snapshotChanges().pipe(map(action => {
-        if (action.payload.exists === false) {
+        
+      console.log(action.payload, "action")
+      if (action.payload.exists === false) {
             return null;
         } else {
             const data = action.payload.data() as any;
             data.id = action.payload.id;
+            console.log(data, "la data")
             return data;
         }
     }));

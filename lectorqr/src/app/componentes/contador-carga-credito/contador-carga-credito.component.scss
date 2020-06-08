@@ -1,11 +1,17 @@
 ion-card{
-    height: 40%;
-    background: rgb(195, 158, 158);
+    height: 32%;
+    margin-right: 5%;
+    margin-left: 5%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    // background: rgb(65, 165, 135);
 }
 h1{
-    font-size: 80px;
+    font-size: 100px;
+    font-family: sans-serif
 }
 
 ion-card-content{
     padding: 14%;
+    background-color: rgb(166, 236, 187);
 }

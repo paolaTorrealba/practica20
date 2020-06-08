@@ -25,13 +25,16 @@ export class BotonScannerComponent implements OnInit {
   ngOnInit(){}
   
   scannear(){
+    console.log("escaneo")
+    this.getByIdAndUpdateCredit("8c95def646b6127282ed50454b73240300dccabc", "qrs");
+
     // if(this.device == "mobile"){
-      this.barcodeScanner.scan().then(barcodeData => {
-        console.log('Barcode data', barcodeData.text);
-        this.getByIdAndUpdateCredit(barcodeData.text, "qrs");
-      }).catch(err => {
-        this.presentToast("Dispositivo no habilitado para carga QR", "danger");
-      });
+      // this.barcodeScanner.scan().then(barcodeData => {
+      //   console.log('Barcode data', barcodeData.text);
+      //   this.getByIdAndUpdateCredit(barcodeData.text, "qrs");
+      // }).catch(err => {
+      //   this.presentToast("Dispositivo no habilitado para carga QR", "danger");
+      // });
     // }
     // else{
     //   this.getByIdAndUpdateCredit("8c95def646b6127282ed50454b73240300dccabc", "qrs");
@@ -59,7 +62,7 @@ export class BotonScannerComponent implements OnInit {
   
   validate(currentUser, doc, barcodeId){
     let currentUserProfilePromise = this.storage.get('profile');
-    let chargesCountPromise = this.countCharges(currentUser.uid, barcodeId);
+    let chargesCountPromise = this.contarCargas(currentUser.uid, barcodeId);
 
     let validationResult = Promise.all([currentUserProfilePromise, chargesCountPromise]).then(values => {
       let result = false;
@@ -72,7 +75,7 @@ export class BotonScannerComponent implements OnInit {
     return validationResult;
   }
 
-  countCharges(uId, barcodeId){
+  contarCargas(uId, barcodeId){
     return new Promise<any>((resolve) => {
       this.firebaseService.getAll(this.chargesCollection, ref => ref.where("user", "==", uId).where("id", "==", barcodeId)).subscribe((docs: Array<any>) => {
         resolve(docs.length);
