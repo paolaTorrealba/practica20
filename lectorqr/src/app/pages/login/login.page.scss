@@ -1,0 +1,102 @@
+svg {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    overflow: visible;
+  }
+  
+  .svg-icon path {
+      stroke: rgba(255,255,255,0.9);
+      fill: none;
+      stroke-width: 1;
+  }
+  input, button {
+    outline: none;
+    border: none;
+  }
+  
+  
+  .login {
+    position: relative;
+    height: 100%;
+    background: rgba(167, 154, 212, 0.8);
+    transition: opacity 0.1s, transform 0.3s cubic-bezier(0.17, -0.65, 0.665, 1.25);
+    transform: scale(1);
+    
+    &__form {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      padding: 1.5rem 2.5rem;
+      text-align: center;
+    }
+    
+    &__row {
+      height: 5rem;
+      padding-top: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    &__icon {
+      margin-bottom: -0.4rem;
+      
+      &.name path {
+        stroke-dasharray: 73.50196075439453;
+        stroke-dashoffset: 73.50196075439453;
+        animation: animatePath 3s 0.5s forwards;
+        animation-delay: 5s;
+      }
+      &.pass path {
+        stroke-dasharray: 92.10662841796875;
+        stroke-dashoffset: 92.10662841796875;
+        animation: animatePath 3s 0.5s forwards;
+        animation-delay: 5s;
+      }
+    }
+    
+    &__input {
+      display: inline-block;
+      width: 65vw;
+      height: 100%;
+      padding-left: 1.5rem;
+      font-size: 1.5rem;
+      background: transparent;
+      color: #FDFCFD;
+    }
+    
+    &__submit {
+      position: relative;
+      width: 100%;
+      height: 4rem;
+      margin: 5rem 0 2.2rem;
+      color: rgba(255,255,255,0.8);
+      font-size: 1.5rem;
+      border-radius: 3rem;
+      overflow: hidden;
+      transition: width 0.3s 0.15s, font-size 0.1s 0.15s;
+    }  
+  }
+  
+  @keyframes animatePath {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  img{
+      width: 50%;
+  }
+  
+  .imgContainer{
+      text-align: center;
+  }
+  
+  ::placeholder {
+      color:white;
+  }
+  
+  .defaultUsers{
+    text-align: center;
+  }

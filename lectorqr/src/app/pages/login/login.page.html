@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Inicio de Sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="login">
+    <div class="imgContainer"><img src="../../../assets/icon.png"></div>
+
+
+    <div class="defaultUsers">
+      <ion-chip color="warning" *ngFor="let usuario of defaultUsers" (click)="loginUsuario(usuario)">
+        <ion-label color="light">{{usuario.email}}</ion-label>
+      </ion-chip>
+    </div>
+
+    <form class="login__form" [formGroup]="validations_form" (ngSubmit)="loginUsuario(validations_form.value)">
+      <div class="login__row">
+        <svg class="login__icon name svg-icon" viewBox="0 0 20 20"><path d="M0,20 a10,8 0 0,1 20,0z M10,0 a4,4 0 0,1 0,8 a4,4 0 0,1 0,-8" /></svg>
+        <ion-input type="text" class="login__input name" placeholder="Correo Electrónico" formControlName="email" required></ion-input>
+        <div class="validation-errors">
+          <ng-container *ngFor="let validation of validation_messages.email">
+            <div class="error-message" *ngIf="validations_form.get('email').hasError(validation.type) && (validations_form.get('email').dirty || validations_form.get('email').touched)">
+              {{ validation.message }}
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div class="login__row">
+        <svg class="login__icon pass svg-icon" viewBox="0 0 20 20"><path d="M0,20 20,20 20,8 0,8z M10,13 10,16z M4,8 a6,8 0 0,1 12,0" /></svg>
+        <ion-input type="password" class="login__input pass" placeholder="Contraseña" formControlName="password" required></ion-input>
+        <div class="validation-errors">
+          <ng-container *ngFor="let validation of validation_messages.password">
+            <div class="error-message" *ngIf="validations_form.get('password').hasError(validation.type) && (validations_form.get('password').dirty || validations_form.get('password').touched)">
+              {{ validation.message }}
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <ion-button class="login__submit" type="submit"  [disabled]="!validations_form.valid">Ingresar</ion-button>
+      <label class="error-message">{{errorMessage}}</label>
+    </form>
+  </div>
+</ion-content>
