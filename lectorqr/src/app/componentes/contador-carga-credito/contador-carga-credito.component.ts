@@ -18,9 +18,13 @@ export class ContadorCargaCreditoComponent implements OnInit {
   ngOnInit() {
 
     this.usuarioService.getAuthStateChanged().then((usuario:any) => {    
-      this.firebaseService.getOne("Usuarios",usuario.uid).subscribe((data: any) =>{
-      this.credito = data[0].credito;    
-      this.perfil= data[0].perfil;
+      this.firebaseService.getOne("Usuarios",usuario.uid).subscribe((data: Array<any>) =>{
+      for (let i = 0; i < data.length ; i++){
+       if(usuario.uid === data[i].id){   
+        this.credito = data[i].credito;    
+        this.perfil= data[i].perfil;
+      }
+    }
       })
     });
   }

@@ -16,6 +16,8 @@ export class LoginPage implements OnInit {
   errorMessage: string = '';
   defaultUsers: Array<any> = [];
   usuario: Usuario;
+  public email;
+  public password;
  
   constructor(
     private navCtrl: NavController,
@@ -51,11 +53,12 @@ export class LoginPage implements OnInit {
   };
 
   agregarUsuariosDefault(){
+    this.defaultUsers.push({"email":"anonimo@anonimo.com", "password":"444444", "perfil":"usuario", "sexo":"masculino"});
+    this.defaultUsers.push({"email":"tester@tester.com", "password":"555555", "perfil":"tester","sexo": "femenino"});
     this.defaultUsers.push({"email":"admin@admin.com", "password":"111111", "perfil":"admin", "sexo":"femenino"});
     this.defaultUsers.push({"email":"invitado@invitado.com", "password":"222222", "perfil":"invitado", "sexo":"femenino"});
     this.defaultUsers.push({"email":"usuario@usuario.com", "password":"333333", "perfil":"usuario", "sexo":"masculino"});
-    this.defaultUsers.push({"email":"anonimo@anonimo.com", "password":"444444", "perfil":"usuario", "sexo":"masculino"});
-    this.defaultUsers.push({"email":"tester@tester.com", "password":"555555", "perfil":"tester","sexo": "femenino"});
+
   }
 
   setUsuarioDefault(){
@@ -64,8 +67,10 @@ export class LoginPage implements OnInit {
  
  
   loginUsuario(value){
-    console.log("value", value) 
-    this.storage.set('perfil', value.perfil);
+    this.email= value.email;
+    this.password= value.password;  
+    
+    console.log("value", value)   
     this.authService.loginUser(value)
     .then(res => {
       this.errorMessage = "";
