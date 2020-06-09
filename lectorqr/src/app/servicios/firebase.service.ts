@@ -3,6 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument,
 import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/operators';
 import { Usuario } from '../clases/usuario';
+import { Codigo } from '../clases/codigo';
 
 @Injectable({
   providedIn: 'root'
@@ -66,6 +67,20 @@ export class FirebaseService {
         })); 
       }
 
+      
+      getOneCodigo(collection, id){
+        return this.afs.collection(collection).snapshotChanges().pipe(map(res =>{
+          return res.map(i => {  
+            let data = i.payload.doc.data() as Codigo;          
+            if (id==i.payload.doc.id){               
+               data.id = i.payload.doc.id;                          
+            }  
+            return data;
+          })
+          
+        })); 
+      }
+
   getById(id: string, collection: string) {
     this.objetoDoc = this.afs.doc<any>(`${collection}/${id}`);
     return this.objeto = this.objetoDoc.snapshotChanges().pipe(map(action => {
@@ -77,6 +92,22 @@ export class FirebaseService {
             const data = action.payload.data() as any;
             data.id = action.payload.id;
             console.log(data, "la data")
+            return data;
+        }
+    }));
+  }
+
+  getByIdAndCollection( collection: string,id: string) {
+    console.log("collection,id",collection,id)
+    this.objetoDoc = this.afs.doc<any>(`${collection}/${id}`);
+    return this.objeto = this.objetoDoc.snapshotChanges().pipe(map(i => {    
+      if (i.payload.exists === false) {
+            console.log("no eiste i", i)
+            return null;
+        } else {
+            const data = i.payload.data() as any;
+            console.log(data, "la data1")
+            data.id = i.payload.id;            
             return data;
         }
     }));

@@ -1,5 +1,7 @@
 {
   "name": "lectorqr",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

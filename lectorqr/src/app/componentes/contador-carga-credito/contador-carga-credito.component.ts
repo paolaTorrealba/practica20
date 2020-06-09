@@ -9,15 +9,18 @@ import { FirebaseService } from 'src/app/servicios/firebase.service';
 })
 export class ContadorCargaCreditoComponent implements OnInit {
   private credito: number;
+  private perfil: string;
   
   constructor(private usuarioService: UsuarioService, 
     private firebaseService: FirebaseService) {  
     }
 
   ngOnInit() {
-    this.usuarioService.getAuthStateChanged().then((usuario:any) => {     
+
+    this.usuarioService.getAuthStateChanged().then((usuario:any) => {    
       this.firebaseService.getOne("Usuarios",usuario.uid).subscribe((data: any) =>{
-      this.credito = data[0].credito;  
+      this.credito = data[0].credito;    
+      this.perfil= data[0].perfil;
       })
     });
   }

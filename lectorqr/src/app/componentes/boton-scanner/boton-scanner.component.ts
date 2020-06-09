@@ -10,75 +10,120 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./boton-scanner.component.scss'],
 })
 export class BotonScannerComponent implements OnInit {
-  private device: string = "mobile";
-  private chargesCollection: string = "usedCharges"
-  private usersCollection: string = "usersData"
-
+  public ambiente: string = "web";
+  public credito: number;
+  public perfil: string;
+  public count:number = 0;
+  public contarCargasProm;
+  public sumarCredito: number =undefined;
+ 
   constructor(
     private firebaseService: FirebaseService, 
     private barcodeScanner: BarcodeScanner, 
-    private userService: UsuarioService, 
-    private toastController: ToastController,
-    private storage: Storage
-  ) {}
-
-  ngOnInit(){}
-  
-  scannear(){
-    console.log("escaneo")
-    this.getByIdAndUpdateCredit("8c95def646b6127282ed50454b73240300dccabc", "qrs");
-
-    // if(this.device == "mobile"){
-      // this.barcodeScanner.scan().then(barcodeData => {
-      //   console.log('Barcode data', barcodeData.text);
-      //   this.getByIdAndUpdateCredit(barcodeData.text, "qrs");
-      // }).catch(err => {
-      //   this.presentToast("Dispositivo no habilitado para carga QR", "danger");
-      // });
-    // }
-    // else{
-    //   this.getByIdAndUpdateCredit("8c95def646b6127282ed50454b73240300dccabc", "qrs");
-    // }
+    private usuarioService: UsuarioService, 
+    private toastController: ToastController,  
+  ) {
+   
   }
 
-  getByIdAndUpdateCredit(barcodeId: string, dataNombre: string) {
-    let currentUser = this.userService.getCurrentUser();
-    this.firebaseService.getOnce(dataNombre, barcodeId).subscribe(async doc => {
-      let validation = await this.validate(currentUser, doc, barcodeId);
-      if (validation) {
-        this.firebaseService.getOnce(this.usersCollection, currentUser.uid).toPromise().then(data =>{
-          let actualCredit = data.get("credit") || 0
-          let credit = actualCredit + doc.data().value;
-          this.firebaseService.update(dataNombre, barcodeId, {"enabled":"false"});
-          this.firebaseService.add(this.chargesCollection, {"date":Date.now(),"user":currentUser.uid, "id":barcodeId});
-          this.firebaseService.setDocument(this.usersCollection, currentUser.uid, "credit", credit);
+  ngOnInit(){
+    this.usuarioService.getAuthStateChanged().then((usuario:any) => {    
+      console.log("ngOnInit-boton", usuario) 
+      this.firebaseService.getOne("Usuarios",usuario.uid).subscribe((data: any) =>{
+      this.credito = data[0].credito;      
+      this.perfil= data[0].perfil;
+      })
+    });
+    
+  }
+  
+  async  scannear(){
+    console.log("-scannear-")   
+
+    if(this.ambiente == "mobile"){
+      this.barcodeScanner.scan().then(barcodeData => {       
+        let currentUser = this.usuarioService.getCurrentUser(); 
+        this.contarCargasProm =  this.contarCargas(currentUser.uid, barcodeData.text);
+        if( this.contarCargasProm <= 2) {
+          this.getByIdAndUpdateCredit(barcodeData.text, "codigos");
+        }
+        this.getByIdAndUpdateCredit(barcodeData.text, "codigos");
+      }).catch(err => {
+        this.presentToast("Dispositivo no habilitado para carga QR", "danger");
+      });
+    }
+    else{
+      let currentUser = this.usuarioService.getCurrentUser(); 
+      this.contarCargasProm =  this.contarCargas(currentUser.uid, "8c95def646b6127282ed50454b73240300dccabc");
+      if( this.count <= 1){        
+        this.getByIdAndUpdateCredit("8c95def646b6127282ed50454b73240300dccabc", "codigos");
+      }
+      else
+      console.log("fuera del if", this.count)
+    }    
+  }
+
+  getByIdAndUpdateCredit(barcodeId: string, codigos: string) {
+      let currentUser = this.usuarioService.getCurrentUser();   
+      this.firebaseService.getOneCodigo(codigos, barcodeId).subscribe((data: any) =>{
+      if (data[0].credito != undefined){
+          this.sumarCredito= data[0].credito;
+          if (this.sumarCredito != undefined){
+            console.log("entro al if!!!")      
+            this.firebaseService.update("Usuarios", currentUser.uid,  {"credito":this.credito + this.sumarCredito });
+          }
+        }        
+      });
+    //  ------------------------------------
+      
+      if (this.count <= 1) {         
+          this.firebaseService.update("codigos", barcodeId, {"enabled":"false"});
+          if (this.sumarCredito != undefined){
+            console.log("entro al2 if!!!")
+            this.firebaseService.update("Usuarios", currentUser.uid,  {"credito":this.credito });
+
+          }         
+          this.firebaseService.add("cargasUsadas", {"fecha":Date.now(),"usuario":currentUser.uid, "id":barcodeId});
+          this.contarCargasProm =  this.contarCargas(currentUser.uid, "8c95def646b6127282ed50454b73240300dccabc");
           this.presentToast('Carga Realizada con Exito', "success");
-        })
+ 
       } else {
         this.presentToast('Código QR ya utilizado', "danger");
-      }
-    })
+      }   
   }
   
   validate(currentUser, doc, barcodeId){
-    let currentUserProfilePromise = this.storage.get('profile');
-    let chargesCountPromise = this.contarCargas(currentUser.uid, barcodeId);
-
-    let validationResult = Promise.all([currentUserProfilePromise, chargesCountPromise]).then(values => {
+    console.log(this.perfil)
+    console.log("2 currentUser, doc, barcodeId",currentUser, doc, barcodeId)
+    // let currentUserProfilePromise = this.storage.get('perfil');
+    // let contarCargasPromise = this.contarCargas(currentUser.uid, barcodeId);  
+    console.log("2) ***contarCargasPromise: ",this.count)
+    let validationResult = Promise.all([this.perfil, this.count]).then(values => {
       let result = false;
-      if(doc.exists && ((values[0] == "admin" && values[1] <= 1) || 
-        (values[0] != "admin" && values[1] == 0) && doc.data().enabled == "true")) {
+      console.log("7) *** values",values[0], values[1])   
+
+      console.log("9) Promise.all ", values[1]+1 <= 1  ) 
+
+      if(values[1]+1 <= 1 && doc.enabled == "true" ) {
+         
+          console.log("12 Promise.all---IF-----------",values[1])       
           result = true;
         }
+        else {
+          console.log("10) Promise.all",values[1],"Fuera del IF")       
+        }
+        console.log("11) Promise.all - result",result)
       return result;
     })
+    console.log("3) Promise.all -validationResult ", validationResult)
     return validationResult;
   }
 
-  contarCargas(uId, barcodeId){
-    return new Promise<any>((resolve) => {
-      this.firebaseService.getAll(this.chargesCollection, ref => ref.where("user", "==", uId).where("id", "==", barcodeId)).subscribe((docs: Array<any>) => {
+   async contarCargas(uId, barcodeId){  
+    return new Promise<number>((resolve) => {
+      this.firebaseService.getAll("cargasUsadas", ref => ref.where("usuario", "==", uId).where("id", "==", barcodeId)).subscribe((docs: Array<any>) => {
         resolve(docs.length);
+        this.count=docs.length;
       })
     })
   }

@@ -24,7 +24,7 @@ export class LimpiarCargaComponent implements OnInit {
 
   overrideCollection(){
     let currentUser = this.usuarioService.getCurrentUser();
-    this.firebaseService.getCollection('qrs').subscribe(snapshot => {
+    this.firebaseService.getCollection('codigos').subscribe(snapshot => {
       snapshot.docs.forEach(doc => {
         doc.ref.update({["enabled"]:"true"});
       });
@@ -34,7 +34,7 @@ export class LimpiarCargaComponent implements OnInit {
       if (!doc.exists) {
         return null;
       } else {
-        objetoDoc.update({"credit":0});
+        objetoDoc.update({"credito":0});
       }
     })
   }
