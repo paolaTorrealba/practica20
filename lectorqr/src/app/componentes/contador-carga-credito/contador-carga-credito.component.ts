@@ -8,8 +8,8 @@ import { FirebaseService } from 'src/app/servicios/firebase.service';
   styleUrls: ['./contador-carga-credito.component.scss'],
 })
 export class ContadorCargaCreditoComponent implements OnInit {
-  private credito: number;
-  private perfil: string;
+  public credito: number;
+  public perfil: string;
   
   constructor(private usuarioService: UsuarioService, 
     private firebaseService: FirebaseService) {  

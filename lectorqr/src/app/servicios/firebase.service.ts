@@ -16,8 +16,13 @@ export class FirebaseService {
 
   constructor(public afs: AngularFirestore){}
 
-  add(collection: string, objeto: any): void {
-    this.afs.collection(collection).add(objeto);
+  // add(collection: string, objeto: any): void {
+  //   this.afs.collection(collection).add(objeto);
+  // }
+  add(collection, object){
+    console.log("object", object)
+    return this.afs.collection(collection).add(Object.assign({}, object));
+
   }
 
   setDocument(collection:string, id:string, property:string, value:string): void {
