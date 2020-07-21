@@ -13,12 +13,14 @@ export class ContadorCargaCreditoComponent implements OnInit {
   
   constructor(private usuarioService: UsuarioService, 
     private firebaseService: FirebaseService) {  
+      console.log("constructor de contador")
     }
 
   ngOnInit() {
 
-    this.usuarioService.getAuthStateChanged().then((usuario:any) => {    
-      this.firebaseService.getOne("Usuarios",usuario.uid).subscribe((data: Array<any>) =>{
+    this.usuarioService.getAuthStateChanged().then((usuario:any) => {  
+     //  console.log("traigo los datos del usuario:",usuario)  
+      this.firebaseService.getOneUsuario("Usuarios",usuario.uid).subscribe((data: Array<any>) =>{
       for (let i = 0; i < data.length ; i++){
        if(usuario.uid === data[i].id){   
         this.credito = data[i].credito;    

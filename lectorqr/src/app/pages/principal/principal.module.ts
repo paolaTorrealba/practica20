@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-
 import { IonicModule } from '@ionic/angular';
-
 import { PrincipalPage } from './principal.page';
 import { BotonScannerComponent } from 'src/app/componentes/boton-scanner/boton-scanner.component';
 import { LimpiarCargaComponent } from 'src/app/componentes/limpiar-carga/limpiar-carga.component';
@@ -22,7 +20,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ReactiveFormsModule
   ],
   declarations: [PrincipalPage, BotonScannerComponent, ContadorCargaCreditoComponent, LimpiarCargaComponent]
 })

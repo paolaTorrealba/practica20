@@ -10,7 +10,7 @@
 
 
     <div class="defaultUsers">
-      <ion-chip color="warning" *ngFor="let usuario of defaultUsers" (click)="loginUsuario(usuario)">
+      <ion-chip color="warning" *ngFor="let usuario of defaultUsers" (click)="setUsuarioDefault(usuario)">
         <ion-label color="light">{{usuario.email}}</ion-label>
       </ion-chip>
     </div>

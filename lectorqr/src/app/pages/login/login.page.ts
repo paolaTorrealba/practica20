@@ -61,8 +61,11 @@ export class LoginPage implements OnInit {
 
   }
 
-  setUsuarioDefault(){
-    this.loginUsuario(this.usuario);
+  setUsuarioDefault(item){
+
+    // this.usuario.email=item.email;
+    // this.usuario.password=item.password
+    this.loginUsuario(item);
   }
  
  
@@ -70,10 +73,11 @@ export class LoginPage implements OnInit {
     this.email= value.email;
     this.password= value.password;  
     
-    console.log("value", value)   
+    console.log("usuarioLogueado", value)   
     this.authService.loginUser(value)
     .then(res => {
       this.errorMessage = "";
+      this.storage.set('perfil', value.perfil);
       this.navCtrl.navigateForward('/principal');
     }, err => {
       this.errorMessage = err.message;

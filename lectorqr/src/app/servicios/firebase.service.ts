@@ -30,8 +30,10 @@ export class FirebaseService {
   }
 
   update(collection: string, id:string, objeto:any): void {
+    console.log(collection,id,objeto)
       this.objetoDoc = this.afs.doc<any>(`${collection}/${id}`);
       this.objetoDoc.update(objeto);
+      console.log("fin update")
   }
 
   delete(id: string, collection: string): void {
@@ -60,13 +62,15 @@ export class FirebaseService {
   }
 
    //utilizo este para traer el credito
-  getOne(collection, id){
+  getOneUsuario(collection, id){
+        console.log("getOneUsuario:",collection,id)
         return this.afs.collection(collection).snapshotChanges().pipe(map(res =>{
           return res.map(i => {  
             let data = i.payload.doc.data() as Usuario;          
             if (id==i.payload.doc.id){          
                data.id = i.payload.doc.id;               
             }
+            // console.log("data1:",collection,data)
             return data;
           })
         })); 
@@ -123,6 +127,7 @@ export class FirebaseService {
   }
 
   getOnce(collection, id){
+    console.log("--colleccion:",collection, "id:",id)
     return this.afs.collection(collection).doc(id).get();
   }
 
