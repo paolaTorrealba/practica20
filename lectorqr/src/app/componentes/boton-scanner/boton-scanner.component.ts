@@ -10,7 +10,7 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./boton-scanner.component.scss'],
 })
 export class BotonScannerComponent implements OnInit {
-  private device: string = "mobile";
+  private device: string = "web";
   private chargesCollection: string = "cargasUsadas"
   private usersCollection: string = "Usuarios"
   // public elcodigo:string="hola";
@@ -83,6 +83,7 @@ export class BotonScannerComponent implements OnInit {
           // this.elcodigo1="doc-"+doc.data().credito;
           // let credit = actualCredit
           console.log("Credito a actualizar", credit)
+          console.log(this.variableControl,this.cambioEstado)
           if (!this.variableControl){ //si es admin, carga dos veces, sino carga 1 vez
             if (this.cambioEstado){ // es admin y es la segunda carga
               this.variableControl=true;
@@ -95,12 +96,12 @@ export class BotonScannerComponent implements OnInit {
 
             if(this.cambioEstado){
              //  console.log("this.cambioEstado",this.cambioEstado)
-              this.firebaseService.update(dataNombre, barcodeId, {"enabled":"false"});
+              // this.firebaseService.update(dataNombre, barcodeId, {"enabled":"false"});
             }          
              //console.log("actualizo2")
             this.firebaseService.add(this.chargesCollection, {"date":Date.now(),"usuario":currentUser.uid, "id":barcodeId});
            
-             //console.log("actualizo3","Usuarios")
+             console.log("actualizo3","Usuarios")
             this.firebaseService.update("Usuarios", currentUser.uid, 
                            {"credito":credit });
             // this.firebaseService.setDocument(this.usersCollection, currentUser.uid, "credito", credit);
@@ -127,11 +128,12 @@ export class BotonScannerComponent implements OnInit {
      //  "existe:",doc.exists,"data:",doc.data().enabled)
      
       if (values[0] == "admin" && values[1] <=1) {
-        this.cambioEstado=false;
+        this.cambioEstado=false; //carga una vez mas
          //console.log("this.cambioEsta",this.cambioEstado)
       }
       if (values[0] == "admin" && values[1] == 2) {
         this.cambioEstado=true;
+        console.log("es admin y ya cargo dos veces")
       }
       if(doc.exists && ((values[0] == "admin" && values[1] <= 1) || 
         (values[0] != "admin" && values[1] == 0) && doc.data().enabled == "true")) {
